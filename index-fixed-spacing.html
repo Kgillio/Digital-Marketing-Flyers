@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050505" />
+  <title>Digital Marketing Flyers</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;600;700;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --card-width: clamp(185px, min(16.5vw, 42vh), 305px);
+      --card-ratio: 0.67;
+      --radius: 1000px;
+      --step: 15deg;
+      --rotation: 0deg;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #050505;
+    }
+
+    body {
+      color: #f2f2f2;
+      font-family: "Saira", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 50% 46%, rgba(255,255,255,0.055), transparent 28%),
+        linear-gradient(180deg, #101010 0%, #060606 50%, #020202 100%);
+      overscroll-behavior: none;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.2) 0 1px, transparent 1px),
+        radial-gradient(circle at 70% 60%, rgba(255,255,255,.13) 0 1px, transparent 1px);
+      background-size: 13px 13px, 17px 17px;
+      mix-blend-mode: soft-light;
+      content: "";
+    }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      padding: 16px 20px 0;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .site-header h1 {
+      font-size: clamp(1.8rem, 3.6vw, 3.2rem);
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+    }
+
+    .site-header strong {
+      display: block;
+      margin-top: 5px;
+      font-size: clamp(.75rem, 1.15vw, 1rem);
+    }
+
+    .site-header em {
+      display: block;
+      margin: 3px auto 0;
+      max-width: 720px;
+      color: rgba(255,255,255,.82);
+      font-size: clamp(.72rem, 1.05vw, .95rem);
+      line-height: 1.25;
+    }
+
+    .scene {
+      position: relative;
+      display: grid;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      perspective: 1550px;
+      perspective-origin: 50% 54%;
+      place-items: center;
+    }
+
+    .assembly {
+      position: relative;
+      width: var(--card-width);
+      aspect-ratio: var(--card-ratio);
+      margin-top: 86px;
+      transform-style: preserve-3d;
+      transform:
+        translateZ(calc(var(--radius) * -1))
+        rotateY(var(--rotation));
+      transition: transform 680ms cubic-bezier(.18,.82,.22,1);
+      will-change: transform;
+    }
+
+    .flyer {
+      position: absolute;
+      inset: 0;
+      transform:
+        rotateY(calc(var(--i) * var(--step)))
+        translateZ(var(--radius));
+      transform-style: preserve-3d;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .card {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      opacity: var(--opacity, .18);
+      scale: var(--scale, .9);
+      filter:
+        brightness(var(--brightness, .52))
+        saturate(var(--saturation, .48));
+      transition:
+        transform 450ms ease,
+        opacity 420ms ease,
+        scale 420ms ease,
+        filter 420ms ease;
+    }
+
+    .flyer.active .card {
+      filter: brightness(1) saturate(1);
+    }
+
+    .flyer:hover .card,
+    .flyer:focus-visible .card {
+      transform: rotateY(180deg);
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border: 3px solid rgba(80,80,80,.65);
+      border-radius: 9px;
+      background: #0a0a0a;
+      box-shadow: 7px 9px 18px rgba(0,0,0,.72);
+      backface-visibility: hidden;
+    }
+
+    .flyer.active .face {
+      border-color: #f48c06;
+      box-shadow:
+        7px 10px 23px rgba(0,0,0,.78),
+        0 0 17px rgba(244,140,6,.16);
+    }
+
+    .front {
+      display: grid;
+      place-items: center;
+    }
+
+    .front img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      background: #0b0b0b;
+      image-rendering: auto;
+      pointer-events: none;
+    }
+
+    .caption-strip {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      padding: 7px 10px;
+      background: rgba(244,244,244,.72);
+      color: #090909;
+      font: max(.72rem, .64em) "Caveat", cursive;
+      text-align: right;
+      backdrop-filter: blur(5px);
+    }
+
+    .back {
+      display: grid;
+      padding: 20px;
+      place-content: center;
+      text-align: center;
+      transform: rotateY(180deg);
+      background:
+        linear-gradient(rgba(0,0,0,.70), rgba(0,0,0,.82)),
+        var(--image) center / cover no-repeat;
+    }
+
+    .back h2 {
+      font-size: clamp(1rem, 1.4vw, 1.35rem);
+      line-height: 1.05;
+      text-wrap: balance;
+    }
+
+    .back p {
+      margin-top: 8px;
+      color: rgba(255,255,255,.78);
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      transform: translateX(-50%);
+    }
+
+    .controls button {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 50%;
+      background: rgba(0,0,0,.54);
+      color: white;
+      font: inherit;
+      cursor: pointer;
+      place-items: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .controls button:hover {
+      background: rgba(244,140,6,.2);
+      border-color: rgba(244,140,6,.8);
+    }
+
+    .counter {
+      min-width: 70px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      background: rgba(0,0,0,.54);
+      color: rgba(255,255,255,.9);
+      font-size: .75rem;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      padding: 35px;
+      background: rgba(0,0,0,.92);
+      opacity: 0;
+      visibility: hidden;
+      place-items: center;
+      transition: opacity 220ms ease, visibility 220ms ease;
+      backdrop-filter: blur(12px);
+    }
+
+    .modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal img {
+      display: block;
+      max-width: min(94vw, 1200px);
+      max-height: 90dvh;
+      object-fit: contain;
+      border-radius: 7px;
+      box-shadow: 0 25px 80px rgba(0,0,0,.8);
+    }
+
+    .modal button {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      display: grid;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 50%;
+      background: rgba(0,0,0,.62);
+      color: white;
+      font-size: 1.35rem;
+      cursor: pointer;
+      place-items: center;
+    }
+
+    .image-error {
+      display: grid;
+      width: 100%;
+      height: 100%;
+      padding: 16px;
+      place-content: center;
+      color: #fff;
+      font-size: .72rem;
+      text-align: center;
+      background: #341400;
+    }
+
+    @media (max-width: 800px) {
+      :root {
+        --card-width: min(56vw, 285px);
+      }
+
+      .site-header {
+        padding-top: 18px;
+      }
+
+      .site-header em {
+        max-width: 330px;
+      }
+
+      .scene {
+        perspective: 1050px;
+      }
+
+      .assembly {
+        margin-top: 96px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .assembly,
+      .card,
+      .modal {
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <h1>Digital Marketing Flyers</h1>
+    <strong>scroll up &amp; down / use the up &amp; down arrow keys</strong>
+    <em>selected work in supplier promotions, digital campaigns, and flyer design</em>
+  </header>
+
+  <main class="scene" aria-label="Circular gallery of digital marketing flyers">
+    <section class="assembly" id="assembly"></section>
+  </main>
+
+  <div class="controls">
+    <button id="previous" type="button" aria-label="Previous flyer">↑</button>
+    <div class="counter" id="counter">01 / 24</div>
+    <button id="next" type="button" aria-label="Next flyer">↓</button>
+  </div>
+
+  <div class="modal" id="modal" aria-hidden="true">
+    <button id="closeModal" type="button" aria-label="Close">×</button>
+    <img id="modalImage" src="" alt="">
+  </div>
+
+  <script>
+    const flyers = [
+      { title: "Featured Flyer 01", type: "Digital Marketing Flyer", file: "0193cf6a-b6f0-4fad-a25e-87dc03ba16f6.png" },
+      { title: "Featured Flyer 02", type: "Digital Marketing Flyer", file: "9439b498-5b5b-48a3-987e-eecf615574f8.png" },
+      { title: "Campaign Flyer 03", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 131759.png" },
+      { title: "Campaign Flyer 04", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 131839.png" },
+      { title: "Campaign Flyer 05", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 131921.png" },
+      { title: "Campaign Flyer 06", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 131953.png" },
+      { title: "Campaign Flyer 07", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 132014.png" },
+      { title: "Campaign Flyer 08", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 132327.png" },
+      { title: "Campaign Flyer 09", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 132401.png" },
+      { title: "Campaign Flyer 10", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 132442.png" },
+      { title: "Campaign Flyer 11", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 132508.png" },
+      { title: "Campaign Flyer 12", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 132644.png" },
+      { title: "Campaign Flyer 13", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 132734.png" },
+      { title: "Campaign Flyer 14", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 132939.png" },
+      { title: "Campaign Flyer 15", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 133025.png" },
+      { title: "Campaign Flyer 16", type: "Digital Marketing Flyer", file: "Screenshot 2026-08-05 133131.png" },
+      { title: "ACCO Cubicle Campaign", type: "Supplier Marketing", file: "acco-cubble.png" },
+      { title: "ACCO GBC Campaign", type: "Supplier Marketing", file: "acco-gbc.png" },
+      { title: "ACCO Master Campaign", type: "Supplier Marketing", file: "acco-master.png" },
+      { title: "ACME Product Promotion", type: "Supplier Marketing", file: "acme.png" },
+      { title: "Pentel Promotion", type: "Supplier Marketing", file: "pent.png" },
+      { title: "Pentel Medium Campaign", type: "Supplier Marketing", file: "pentel-medium.png" },
+      { title: "Safco Product Promotion", type: "Supplier Marketing", file: "safco.png" },
+      { title: "Scholastic Campaign", type: "Supplier Marketing", file: "scholastic.png" }
+    ];
+
+    const assembly = document.getElementById("assembly");
+    const counter = document.getElementById("counter");
+    const modal = document.getElementById("modal");
+    const modalImage = document.getElementById("modalImage");
+    const closeModal = document.getElementById("closeModal");
+
+    const total = flyers.length;
+    const stepDegrees = 360 / total;
+
+    let currentIndex = 0;
+    let wheelLocked = false;
+    let touchStartY = 0;
+    let dragStartY = 0;
+    let dragging = false;
+
+    document.documentElement.style.setProperty("--step", `${stepDegrees}deg`);
+
+    function imagePath(filename) {
+      return encodeURI(`assets/${filename}`);
+    }
+
+    function circularDistance(from, to) {
+      let distance = ((to - from) % total + total) % total;
+      if (distance > total / 2) distance -= total;
+      return distance;
+    }
+
+    function buildGallery() {
+      flyers.forEach((flyer, index) => {
+        const path = imagePath(flyer.file);
+        const article = document.createElement("article");
+
+        article.className = "flyer";
+        article.tabIndex = 0;
+        article.style.setProperty("--i", index);
+        article.setAttribute("aria-label", `${flyer.title}. Click the centered card to enlarge it.`);
+
+        article.innerHTML = `
+          <div class="card">
+            <figure class="face front">
+              <img src="${path}" alt="${flyer.title}" loading="eager">
+              <figcaption class="caption-strip">${flyer.title}</figcaption>
+            </figure>
+
+            <section class="face back" style="--image:url('${path}')">
+              <div>
+                <h2>${flyer.title}</h2>
+                <p>${flyer.type}</p>
+              </div>
+            </section>
+          </div>
+        `;
+
+        const image = article.querySelector("img");
+
+        image.addEventListener("error", () => {
+          image.replaceWith(Object.assign(document.createElement("div"), {
+            className: "image-error",
+            textContent: `Image not found: assets/${flyer.file}`
+          }));
+          console.warn(`Image not found: assets/${flyer.file}`);
+        });
+
+        article.addEventListener("click", () => {
+          const selected = ((currentIndex % total) + total) % total;
+
+          if (selected !== index) {
+            currentIndex += circularDistance(selected, index);
+            render();
+            return;
+          }
+
+          modalImage.src = path;
+          modalImage.alt = flyer.title;
+          modal.classList.add("open");
+          modal.setAttribute("aria-hidden", "false");
+        });
+
+        assembly.appendChild(article);
+      });
+    }
+
+    function updateRadius() {
+      // Use the untransformed card width. Measuring the transformed element
+      // made the carousel radius too small and caused the cards to overlap.
+      const cardWidth = assembly.offsetWidth;
+      const baseRadius = cardWidth / (2 * Math.tan(Math.PI / total));
+
+      const isMobile = window.innerWidth <= 800;
+      const spacingMultiplier = isMobile ? 1.18 : 1.38;
+      const minimum = isMobile ? 760 : 1220;
+      const maximum = isMobile ? 1100 : 1900;
+
+      const radius = Math.min(
+        maximum,
+        Math.max(minimum, baseRadius * spacingMultiplier)
+      );
+
+      document.documentElement.style.setProperty("--radius", `${radius}px`);
+    }
+
+    function render() {
+      const selected = ((currentIndex % total) + total) % total;
+      const rotation = -currentIndex * stepDegrees;
+
+      document.documentElement.style.setProperty("--rotation", `${rotation}deg`);
+      counter.textContent =
+        `${String(selected + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+
+      [...assembly.children].forEach((article, index) => {
+        const distance = Math.abs(circularDistance(selected, index));
+        const proximity = Math.max(0, 1 - distance / 5);
+
+        article.classList.toggle("active", index === selected);
+        article.style.setProperty("--opacity", String(.15 + proximity * .85));
+        article.style.setProperty("--scale", String(.86 + proximity * .14));
+        article.style.setProperty("--brightness", String(.46 + proximity * .54));
+        article.style.setProperty("--saturation", String(.40 + proximity * .60));
+        article.style.zIndex = String(Math.round(proximity * 100));
+      });
+    }
+
+    function move(direction) {
+      currentIndex += direction;
+      render();
+    }
+
+    /*
+      This directly turns the carousel when the mouse wheel or trackpad moves.
+      It does not depend on the webpage itself scrolling.
+    */
+    window.addEventListener("wheel", event => {
+      event.preventDefault();
+
+      if (modal.classList.contains("open") || wheelLocked) return;
+      if (Math.abs(event.deltaY) < 2 && Math.abs(event.deltaX) < 2) return;
+
+      wheelLocked = true;
+
+      const amount =
+        Math.abs(event.deltaY) >= Math.abs(event.deltaX)
+          ? event.deltaY
+          : event.deltaX;
+
+      move(amount > 0 ? 1 : -1);
+
+      window.setTimeout(() => {
+        wheelLocked = false;
+      }, 260);
+    }, { passive: false });
+
+    window.addEventListener("keydown", event => {
+      if (modal.classList.contains("open")) {
+        if (event.key === "Escape") closePreview();
+        return;
+      }
+
+      if (["ArrowDown", "ArrowRight", "PageDown"].includes(event.key)) {
+        event.preventDefault();
+        move(1);
+      }
+
+      if (["ArrowUp", "ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        move(-1);
+      }
+    });
+
+    window.addEventListener("touchstart", event => {
+      touchStartY = event.changedTouches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener("touchend", event => {
+      if (modal.classList.contains("open")) return;
+
+      const difference = touchStartY - event.changedTouches[0].clientY;
+
+      if (Math.abs(difference) > 30) {
+        move(difference > 0 ? 1 : -1);
+      }
+    }, { passive: true });
+
+    window.addEventListener("pointerdown", event => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      dragStartY = event.clientY;
+      dragging = true;
+    });
+
+    window.addEventListener("pointerup", event => {
+      if (!dragging || modal.classList.contains("open")) return;
+
+      dragging = false;
+      const difference = dragStartY - event.clientY;
+
+      if (Math.abs(difference) > 45) {
+        move(difference > 0 ? 1 : -1);
+      }
+    });
+
+    window.addEventListener("pointercancel", () => {
+      dragging = false;
+    });
+
+    document.getElementById("previous").addEventListener("click", () => move(-1));
+    document.getElementById("next").addEventListener("click", () => move(1));
+
+    function closePreview() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      modalImage.src = "";
+    }
+
+    closeModal.addEventListener("click", closePreview);
+
+    modal.addEventListener("click", event => {
+      if (event.target === modal) closePreview();
+    });
+
+    window.addEventListener("resize", () => {
+      updateRadius();
+      render();
+    });
+
+    buildGallery();
+    updateRadius();
+    render();
+  </script>
+</body>
+</html>
