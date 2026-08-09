@@ -169,15 +169,16 @@
     .front {
       display: grid;
       place-items: center;
+      background: #0a0a0a;
     }
 
     .front img {
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      object-position: center;
-      background: #0b0b0b;
+      object-fit: cover;
+      object-position: center top;
+      background: transparent;
       image-rendering: auto;
       pointer-events: none;
     }
@@ -484,8 +485,6 @@
     }
 
     function updateRadius() {
-      // Use the untransformed card width. Measuring the transformed element
-      // made the carousel radius too small and caused the cards to overlap.
       const cardWidth = assembly.offsetWidth;
       const baseRadius = cardWidth / (2 * Math.tan(Math.PI / total));
 
@@ -528,10 +527,6 @@
       render();
     }
 
-    /*
-      This directly turns the carousel when the mouse wheel or trackpad moves.
-      It does not depend on the webpage itself scrolling.
-    */
     window.addEventListener("wheel", event => {
       event.preventDefault();
 
@@ -630,6 +625,3 @@
   </script>
 </body>
 </html>
-
-
-Portfolio site
